@@ -57,51 +57,51 @@ class Board:
         new = None
         captured = None
         if move == "fl":
-            if selected.color == "W" or selected.color == "KW":
+            if selected.color == "W":
                 new = (selected.location[0] - 1, selected.location[1] - 1)
-            elif selected.color == "B" or selected.color == "KB":
+            elif selected.color == "B":
                 new = (selected.location[0] - 1, selected.location[1] + 1)
         elif move == "fr":
-            if selected.color == "W" or selected.color == "KW":
+            if selected.color == "W":
                 new = (selected.location[0] + 1, selected.location[1] - 1)
-            elif selected.color == "B" or selected.color == "KB":
+            elif selected.color == "B":
                 new = (selected.location[0] + 1, selected.location[1] + 1)
         elif move == "bl":
-            if selected.color == "KW":
+            if selected.color == "W" and selected.kinged:
                 new = (selected.location[0] - 1, selected.location[1] + 1)
-            elif selected.color == "KB":
+            elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] - 1, selected.location[1] - 1)
         elif move == "br":
-            if selected.color == "KW":
+            if selected.color == "W" and selected.kinged:
                 new = (selected.location[0] + 1, selected.location[1] + 1)
-            elif selected.color == "KB":
+            elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] + 1, selected.location[1] - 1)
         elif move == "cfl":
-            if selected.color == "W" or selected.color == "KW":
+            if selected.color == "W":
                 new = (selected.location[0] - 2, selected.location[1] - 2)
                 captured = (selected.location[0] - 1, selected.location[1] - 1)
-            elif selected.color == "B" or selected.color == "KB":
+            elif selected.color == "B":
                 new = (selected.location[0] - 2, selected.location[1] + 2)
                 captured = (selected.location[0] - 1, selected.location[1] + 1)
         elif move == "cfr":
-            if selected.color == "W" or selected.color == "KW":
+            if selected.color == "W":
                 new = (selected.location[0] + 2, selected.location[1] - 2)
                 selected = (selected.location[0] + 1, selected.location[1] - 1)
-            elif selected.color == "B" or selected.color == "KB":
+            elif selected.color == "B":
                 new = (selected.location[0] + 2, selected.location[1] + 2)
                 captured = (selected.location[0] + 1, selected.location[1] + 1)
         elif move == "cbl":
-            if selected.color == "KW":
+            if selected.color == "W" and selected.kinged:
                 new = (selected.location[0] - 2, selected.location[1] + 2)
                 captured = (selected.location[0] - 1, selected.location[1] + 1)
-            elif selected.color == "KB":
+            elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] - 2, selected.location[1] - 2)
                 captured = (selected.location[0] - 1, selected.location[1] - 1)
         elif move == "cbr":
-            if selected.color == "KW":
+            if selected.color == "W" and selected.kinged:
                 new = (selected.location[0] + 2, selected.location[1] + 2)
                 captured = (selected.location[0] + 1, selected.location[1] + 1)
-            elif selected.color == "KB":
+            elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] + 2, selected.location[1] - 2)
                 captured = (selected.location[0] + 1, selected.location[1] - 1)
 
@@ -130,11 +130,11 @@ class Board:
 
 if __name__ == "__main__":
     board = Board()
-    print(board.pieces)
+    board.pieces[0].kinged = True
     board.print_board()
     game_over = False
     print("Move: <piece x> <piece y> <movement>")
-    print("Movement: c for capture, f/b for piece forward, l/r for left or right")
+    print("Movement: c for capture, f/b for piece forward or backward, l/r for left or right")
     print("          so capturing forward and right is \"cfr\"")
     while not game_over:
         move = input("Move?: ")
