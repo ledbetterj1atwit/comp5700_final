@@ -51,6 +51,9 @@ class Board:
                 break
         if selected is None:
             return False
+        if move == "kill":
+            self.pieces.remove(selected)
+            return True
         new = None
         captured = None
         if move == "fl":
