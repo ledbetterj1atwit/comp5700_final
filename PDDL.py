@@ -299,7 +299,9 @@ class Action:
                         n.terms[t_idx] = call.terms[term_idx]
 
         for p in pre.predicates:
-            if p not in state:
+            pre_list = [x for x in pre.predicates if x == p]
+            s_list = [x for x in state if x == p]
+            if len(pre_list) > len(s_list):
                 return False
         for p in npre.predicates:
             if p in state:
@@ -514,6 +516,32 @@ class World:
                 expanded += 1
             open_nodes.sort(key=lambda x: x.cost + weight * heuristic(self, x))
 
+    def partial_wastar(self, heuristic: Callable, inv_heuristic: Callable, weight: float, depth: int):
+        open_nodes = [self.inital_state]
+        closed = []
+        while True:
+            if len(open_nodes) == 0 or open_nodes[0] is None:
+                out = [x for x in closed if depth == x.cost]
+                out.sort(key=lambda x: x.cost + weight * inv_heuristic(self, x))
+                return out
+            state = open_nodes.pop(0)
+            if len([x for x in closed if x.cost > depth]) > 0:
+                out = [x for x in closed if depth == x.cost]
+                out.sort(key=lambda x: x.cost + weight * inv_heuristic(self, x))
+                return out
+            elif len([x for x in state.preds if x in self.goal_state.preds]) == len(self.goal_state.preds):
+                return [state]
+            else:
+                valid_action_calls = self.ground(state)
+                children = []
+                for call in valid_action_calls:
+                    children.append(self.get_action_by_name(call.name).apply_action(state, call))
+                for child in children:
+                    if child not in closed:
+                        open_nodes.insert(0, child)
+                closed.append(state)
+            open_nodes.sort(key=lambda x: x.cost + weight * heuristic(self, x))
+
 
 def h0(wrl, s):
     return 0
@@ -525,6 +553,11 @@ def hlits(wrl: World, s: State):
         if p in s.preds:
             p_false -= 1
     return p_false
+
+
+def hlits_inv(wrl: World, s: State):
+    p_true = [p for p in wrl.goal_state.preds if p in s.preds]
+    return len(p_true)
 
 
 def hmax(wrl: World, s: State):
