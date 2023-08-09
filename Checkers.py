@@ -31,7 +31,7 @@ class Board:
         for i in range(size):
             for j in range(peice_rows):
                 self.pieces.append(Piece("B", (i, j)))
-                self.pieces.append(Piece("W", (i, size - 1 - j)))
+                self.pieces.append(Piece("R", (i, size - 1 - j)))
 
     def print_board(self):
         cols = ""
@@ -69,48 +69,48 @@ class Board:
         new = None
         captured = None
         if direction == "fl":
-            if selected.color == "W":
+            if selected.color == "R":
                 new = (selected.location[0] - 1, selected.location[1] - 1)
             elif selected.color == "B":
                 new = (selected.location[0] - 1, selected.location[1] + 1)
         elif direction == "fr":
-            if selected.color == "W":
+            if selected.color == "R":
                 new = (selected.location[0] + 1, selected.location[1] - 1)
             elif selected.color == "B":
                 new = (selected.location[0] + 1, selected.location[1] + 1)
         elif direction == "bl":
-            if selected.color == "W" and selected.kinged:
+            if selected.color == "R" and selected.kinged:
                 new = (selected.location[0] - 1, selected.location[1] + 1)
             elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] - 1, selected.location[1] - 1)
         elif direction == "br":
-            if selected.color == "W" and selected.kinged:
+            if selected.color == "R" and selected.kinged:
                 new = (selected.location[0] + 1, selected.location[1] + 1)
             elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] + 1, selected.location[1] - 1)
         elif direction == "cfl":
-            if selected.color == "W":
+            if selected.color == "R":
                 new = (selected.location[0] - 2, selected.location[1] - 2)
                 captured = (selected.location[0] - 1, selected.location[1] - 1)
             elif selected.color == "B":
                 new = (selected.location[0] - 2, selected.location[1] + 2)
                 captured = (selected.location[0] - 1, selected.location[1] + 1)
         elif direction == "cfr":
-            if selected.color == "W":
+            if selected.color == "R":
                 new = (selected.location[0] + 2, selected.location[1] - 2)
                 captured = (selected.location[0] + 1, selected.location[1] - 1)
             elif selected.color == "B":
                 new = (selected.location[0] + 2, selected.location[1] + 2)
                 captured = (selected.location[0] + 1, selected.location[1] + 1)
         elif direction == "cbl":
-            if selected.color == "W" and selected.kinged:
+            if selected.color == "R" and selected.kinged:
                 new = (selected.location[0] - 2, selected.location[1] + 2)
                 captured = (selected.location[0] - 1, selected.location[1] + 1)
             elif selected.color == "B" and selected.kinged:
                 new = (selected.location[0] - 2, selected.location[1] - 2)
                 captured = (selected.location[0] - 1, selected.location[1] - 1)
         elif direction == "cbr":
-            if selected.color == "W" and selected.kinged:
+            if selected.color == "R" and selected.kinged:
                 new = (selected.location[0] + 2, selected.location[1] + 2)
                 captured = (selected.location[0] + 1, selected.location[1] + 1)
             elif selected.color == "B" and selected.kinged:
@@ -136,7 +136,7 @@ class Board:
             self.pieces.remove(to_capture)
         if selected.color == "B" and new[1] == self.size - 1:
             selected.kinged = True
-        if selected.color == "W" and new[1] == 0:
+        if selected.color == "R" and new[1] == 0:
             selected.kinged = True
         selected.location = new
         return True
@@ -260,7 +260,8 @@ class Board:
 if __name__ == "__main__":
     t_plan = [
     ]
-    board = Board(size=5)
+    size = input("Board size? (>3): ")
+    board = Board(size=int(size))
     board.print_board()
     comp_wrl = PDDL.World(*PDDL.World.parse(board.generate_pddl())[1:])
     comp_plan_depth = 3
@@ -308,9 +309,9 @@ if __name__ == "__main__":
 
             if out_of_moves:
                 game_over = True
-                print("Computer cannot find a valid strategy. White wins.")
+                print("Computer cannot find a valid strategy. Red wins.")
             if not captured:
-                turn = "W"
+                turn = "R"
         else:
             print("Player Turn")
             result = False
@@ -336,7 +337,7 @@ if __name__ == "__main__":
         w_count = 0
         b_count = 0
         for p in board.pieces:
-            if p.color == "W":
+            if p.color == "R":
                 w_count += 1
             if p.color == "B":
                 b_count += 1
@@ -344,5 +345,5 @@ if __name__ == "__main__":
             print("Black wins.")
             game_over = True
         if b_count == 0:
-            print("White wins.")
+            print("Red wins.")
             game_over = True
