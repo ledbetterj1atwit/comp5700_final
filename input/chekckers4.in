@@ -1,5 +1,5 @@
 predicates: FFree(x) BFree(x) LFree(x) RFree(x) Captured(x) Kinged(x) Own(x)
-constants: WA WB WC WD BA BB BC BD
+constants: RA RB RC RD BA BB BC BD
 5 actions
 
 MoveFL piece
@@ -32,9 +32,14 @@ King piece
   del:
   add: Kinged(piece)
 
-#CaptureWA_FL piece
-#  pre: [Free Sequence that gives position] Own(piece)
-#  preneg: Captured(B)
-#  del: [Frees befitting new position]
-#  add: [Frees Befitting new position] Captured(B)
+CaptureRA_** piece
+  pre: [Free Sequence that gives current position] Own(piece) [Possibly a Kinged(piece) for backwards moves]
+  preneg: Captured(RA)
+  del: [Free Sequence that gives current position]
+  add: [Free Sequence that gives new position] Captured(RA)
+
+...
+ 
+inital: [Free Sequences that gives piece positions] Own(BA) Own(BB) Own(BC) Own(BD)
+goal: Captured(RA) Captured(RB) Captured(RC) Captured(RD)
 
